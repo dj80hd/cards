@@ -10,6 +10,22 @@ import (
 var strRanks = []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
 var strSuits = []string{"c", "d", "h", "s"}
 
+type Hand struct {
+	cards []Card
+}
+
+func NewHand(cards []Card) *Hand {
+	return &Hand{cards: cards}
+}
+
+func (h *Hand) Replace(i int, c Card) {
+	h.cards[i] = c
+}
+
+func (h *Hand) String() string {
+	return fmt.Sprintf("%v", h.cards)
+}
+
 type Card struct {
 	suit int
 	rank int
@@ -25,12 +41,15 @@ func (d *Deck) Len() int {
 	return len(d.cards) - d.index
 }
 
-func (d *Deck) Draw() Card {
+func (d *Deck) Draw(n int) []Card {
 	d.mux.Lock()
 	defer d.mux.Unlock()
-
-	d.index = d.index + 1
-	return d.cards[d.index-1]
+	cards := make([]Card, 0)
+	for i := 0; i < n; i++ {
+		d.index = d.index + 1
+		cards = append(cards, d.cards[d.index-1])
+	}
+	return cards
 }
 
 func (d *Deck) String() string {

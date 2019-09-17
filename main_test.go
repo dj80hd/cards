@@ -19,9 +19,18 @@ func TestDeck(t *testing.T) {
 
 func TestDraw(t *testing.T) {
 	deck := NewDeck()
-	card := deck.Draw()
-	fmt.Println(card)
+	cards := deck.Draw(1)
+	fmt.Println(cards)
 	if 51 != deck.Len() {
+		t.Errorf("deck has %d after draw", deck.Len())
+	}
+}
+
+func TestHand(t *testing.T) {
+	deck := NewDeck()
+	hand := deck.Draw(5)
+	fmt.Println(hand)
+	if 47 != deck.Len() {
 		t.Errorf("deck has %d after draw", deck.Len())
 	}
 }
