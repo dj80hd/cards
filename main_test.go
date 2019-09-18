@@ -17,20 +17,39 @@ func TestDeck(t *testing.T) {
 	}
 }
 
-func TestDraw(t *testing.T) {
+func TestHand(t *testing.T) {
 	deck := NewDeck()
-	cards := deck.Draw(1)
-	fmt.Println(cards)
-	if 51 != deck.Len() {
+
+	cards, err := deck.Draw(5)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	hand := Hand(cards)
+	err = hand.NewCard(1, deck)
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	if 46 != deck.Len() {
 		t.Errorf("deck has %d after draw", deck.Len())
 	}
 }
 
-func TestHand(t *testing.T) {
+func TestOverDraw(t *testing.T) {
 	deck := NewDeck()
-	hand := deck.Draw(5)
-	fmt.Println(hand)
-	if 47 != deck.Len() {
-		t.Errorf("deck has %d after draw", deck.Len())
+
+	cards, err := deck.Draw(52)
+	if err != nil {
+		t.Errorf(err.Error())
 	}
+	if 52 != len(cards) {
+		t.Errorf("draw whole desk is %d", len(cards))
+	}
+
+	cards, err = deck.Draw(1)
+	if err == nil {
+		t.Errorf("expected overdraw")
+	}
+
 }

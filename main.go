@@ -10,20 +10,21 @@ import (
 var strRanks = []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
 var strSuits = []string{"c", "d", "h", "s"}
 
-type Hand struct {
-	cards []Card
-}
+type Hand []Card
 
-func NewHand(cards []Card) *Hand {
-	return &Hand{cards: cards}
-}
+// NewCard replaces the nth card with a new one from the deck
+func (h Hand) NewCard(n int, d *Deck) error {
+	if n >= len(h) {
+		return fmt.Errorf("index %d >= len %d", n, len(h))
+	}
 
-func (h *Hand) Replace(i int, c Card) {
-	h.cards[i] = c
-}
+	cards, err := d.Draw(1)
+	if err != nil {
+		return err
+	}
+	h[n] = cards[0]
 
-func (h *Hand) String() string {
-	return fmt.Sprintf("%v", h.cards)
+	return nil
 }
 
 type Card struct {
@@ -41,15 +42,19 @@ func (d *Deck) Len() int {
 	return len(d.cards) - d.index
 }
 
-func (d *Deck) Draw(n int) []Card {
+func (d *Deck) Draw(n int) ([]Card, error) {
 	d.mux.Lock()
 	defer d.mux.Unlock()
+	if n > d.Len() {
+		return nil, fmt.Errorf("draw %d > len %d", n, d.Len())
+	}
+
 	cards := make([]Card, 0)
 	for i := 0; i < n; i++ {
 		d.index = d.index + 1
 		cards = append(cards, d.cards[d.index-1])
 	}
-	return cards
+	return cards, nil
 }
 
 func (d *Deck) String() string {
