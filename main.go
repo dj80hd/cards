@@ -12,6 +12,10 @@ var strSuits = []string{"c", "d", "h", "s"}
 
 type Hand []Card
 
+func (a Hand) Len() int           { return len(a) }
+func (a Hand) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a Hand) Less(i, j int) bool { return a[i].suit < a[j].suit || a[i].rank < a[i].rank }
+
 // NewCard replaces the nth card with a new one from the deck
 func (h Hand) NewCard(n int, d *Deck) error {
 	if n >= len(h) {
@@ -27,11 +31,13 @@ func (h Hand) NewCard(n int, d *Deck) error {
 	return nil
 }
 
+// Card is a playing card with a suit and rank
 type Card struct {
 	suit int
 	rank int
 }
 
+// Deck is a group of cards that can be drawn out
 type Deck struct {
 	cards []Card
 	index int

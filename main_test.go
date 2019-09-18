@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"testing"
 )
 
@@ -52,4 +53,23 @@ func TestOverDraw(t *testing.T) {
 		t.Errorf("expected overdraw")
 	}
 
+}
+
+func TestSortHand(t *testing.T) {
+	hand := Hand([]Card{
+		Card{
+			suit: 3,
+			rank: 4,
+		},
+		Card{
+			suit: 1,
+			rank: 2,
+		},
+	})
+
+	sort.Sort(hand)
+
+	if 1 != hand[0].suit || 2 != hand[0].rank {
+		t.Errorf("sort failed %v", hand)
+	}
 }
