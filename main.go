@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"sort"
 	"sync"
 	"time"
 )
@@ -12,9 +13,14 @@ var strSuits = []string{"c", "d", "h", "s"}
 
 type Hand []Card
 
-func (a Hand) Len() int           { return len(a) }
-func (a Hand) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a Hand) Less(i, j int) bool { return a[i].suit < a[j].suit || a[i].rank < a[i].rank }
+func (a Hand) Len() int      { return len(a) }
+func (a Hand) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a Hand) Less(i, j int) bool {
+	if a[i].suit == a[j].suit {
+		return a[i].rank < a[j].rank
+	}
+	return a[i].suit < a[j].suit
+}
 
 // Three returns the rank for any 3 of a kind, -1 if none/error
 func (a Hand) Three() int {
@@ -47,6 +53,7 @@ func (a Hand) Three() int {
 
 //Strait4 returns the suit and rank of a straight. -1 for none
 func (a Hand) Strait4() (int, int) {
+	sort.Sort(a)
 	for start := 0; start < len(a)-3; start++ {
 		if a[start].suit == a[start+1].suit &&
 			a[start].suit == a[start+2].suit &&
@@ -54,6 +61,23 @@ func (a Hand) Strait4() (int, int) {
 			a[start].rank+1 == a[start+1].rank &&
 			a[start].rank+2 == a[start+2].rank &&
 			a[start].rank+3 == a[start+3].rank {
+			return a[start].suit, a[start].rank
+		}
+	}
+	return -1, -1
+}
+
+func (a Hand) Strait5() (int, int) {
+	sort.Sort(a)
+	for start := 0; start < len(a)-4; start++ {
+		if a[start].suit == a[start+1].suit &&
+			a[start].suit == a[start+2].suit &&
+			a[start].suit == a[start+3].suit &&
+			a[start].suit == a[start+4].suit &&
+			a[start].rank+1 == a[start+1].rank &&
+			a[start].rank+2 == a[start+2].rank &&
+			a[start].rank+3 == a[start+3].rank &&
+			a[start].rank+4 == a[start+4].rank {
 			return a[start].suit, a[start].rank
 		}
 	}
