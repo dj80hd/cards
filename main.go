@@ -84,8 +84,19 @@ func (a Hand) Strait5() (int, int) {
 	return -1, -1
 }
 
-// NewCard replaces the nth card with a new one from the deck
-func (h Hand) NewCard(n int, d *Deck) error {
+func (a Hand) Pair() (int, int) {
+	sort.Sort(a)
+	for start := 0; start < len(a)-4; start++ {
+		if a[start].suit == a[start+1].suit &&
+			a[start].rank == a[start+1].rank {
+			return a[start].suit, a[start].rank
+		}
+	}
+	return -1, -1
+}
+
+// ReplaceCard replaces the nth card with a new one from the deck
+func (h Hand) ReplaceCard(n int, d *Deck) error {
 	if n >= len(h) {
 		return fmt.Errorf("index %d >= len %d", n, len(h))
 	}
