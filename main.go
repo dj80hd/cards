@@ -8,6 +8,18 @@ import (
 	"time"
 )
 
+/**
+*
+* RoyalFlush bool
+* StraitFlush() bool
+* Four() []int
+* FullHouse() bool
+* Flush() bool
+* Straight() bool
+* Three() []int
+* Pair() []int
+ */
+
 var strRanks = []string{"2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"}
 var strSuits = []string{"c", "d", "h", "s"}
 
@@ -52,33 +64,33 @@ func (a Hand) Three() int {
 }
 
 //Strait4 returns the suit and rank of a straight. -1 for none
-func (a Hand) Strait4() (int, int) {
-	sort.Sort(a)
-	for start := 0; start < len(a)-3; start++ {
-		if a[start].suit == a[start+1].suit &&
-			a[start].suit == a[start+2].suit &&
-			a[start].suit == a[start+3].suit &&
-			a[start].rank+1 == a[start+1].rank &&
-			a[start].rank+2 == a[start+2].rank &&
-			a[start].rank+3 == a[start+3].rank {
-			return a[start].suit, a[start].rank
+func (h Hand) Strait4() (int, int) {
+	sort.Sort(h)
+	for start := 0; start < len(h)-3; start++ {
+		if h[start].suit == h[start+1].suit &&
+			h[start].suit == h[start+2].suit &&
+			h[start].suit == h[start+3].suit &&
+			h[start].rank+1 == h[start+1].rank &&
+			h[start].rank+2 == h[start+2].rank &&
+			h[start].rank+3 == h[start+3].rank {
+			return h[start].suit, h[start].rank
 		}
 	}
 	return -1, -1
 }
 
-func (a Hand) Strait5() (int, int) {
-	sort.Sort(a)
-	for start := 0; start < len(a)-4; start++ {
-		if a[start].suit == a[start+1].suit &&
-			a[start].suit == a[start+2].suit &&
-			a[start].suit == a[start+3].suit &&
-			a[start].suit == a[start+4].suit &&
-			a[start].rank+1 == a[start+1].rank &&
-			a[start].rank+2 == a[start+2].rank &&
-			a[start].rank+3 == a[start+3].rank &&
-			a[start].rank+4 == a[start+4].rank {
-			return a[start].suit, a[start].rank
+func (h Hand) Strait5() (int, int) {
+	sort.Sort(h)
+	for start := 0; start < len(h)-4; start++ {
+		if h[start].suit == h[start+1].suit &&
+			h[start].suit == h[start+2].suit &&
+			h[start].suit == h[start+3].suit &&
+			h[start].suit == h[start+4].suit &&
+			h[start].rank+1 == h[start+1].rank &&
+			h[start].rank+2 == h[start+2].rank &&
+			h[start].rank+3 == h[start+3].rank &&
+			h[start].rank+4 == h[start+4].rank {
+			return h[start].suit, h[start].rank
 		}
 	}
 	return -1, -1

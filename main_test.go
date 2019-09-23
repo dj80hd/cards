@@ -61,9 +61,14 @@ func TestHand(t *testing.T) {
 	}
 
 	hand := Hand(cards)
+	oldcard := hand[1]
 	err = hand.ReplaceCard(1, deck)
 	if err != nil {
 		t.Errorf(err.Error())
+	}
+	newcard := hand[1]
+	if oldcard == newcard {
+		t.Errorf("card not replaced")
 	}
 
 	if 46 != deck.Len() {
