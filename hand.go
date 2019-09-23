@@ -22,18 +22,7 @@ func (h Hand) RoyalFlush() bool {
 }
 
 func (h Hand) StraightFlush() bool {
-	//TODO: return Straight && Flush
-	sort.Sort(h) // TODO: ensure hand is always sorted to avoid this
-	suit := h[0].suit
-	rank := h[0].rank
-	for i := 1; i < len(h); i++ {
-		if h[i].suit != suit || h[i].rank != rank+1 {
-			return false
-		}
-		suit = h[i].suit
-		rank = h[i].rank
-	}
-	return true
+	return h.Straight() && h.Flush()
 }
 
 func (h Hand) Four() []Card {
