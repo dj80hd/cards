@@ -28,63 +28,101 @@ func (a Hand) Less(i, j int) bool {
 	return a[i].suit < a[j].suit
 }
 
-// Three returns a slice of indexes where 3 of a kind is found.
-func (h Hand) Three() []int {
+func (h Hand) RoyalFlush() bool {
+	sort.Sort(h)                               // TODO: ensure hand is always sorted to avoid this
+	return h.StraightFlush() && h[0].rank == 9 //jack
+}
+
+func (h Hand) StraightFlush() bool {
+	sort.Sort(h) // TODO: ensure hand is always sorted to avoid this
+	suit := h[0].suit
+	rank := h[0].rank
+	for i := 1; i < len(h); i++ {
+		if h[i].suit != suit || h[i].rank != rank+1 {
+			return false
+		}
+		suit = h[i].suit
+		rank = h[i].rank
+	}
+	return true
+}
+
+func (h Hand) Four() []Card {
 	sort.Sort(h) // TODO: ensure hand is always sorted to avoid this
 
-	ret := []int{}
+	cards := []Card{}
+
+	for i := 0; i < len(h)-3; i++ {
+		if h[i].rank == h[i+1].rank && h[i].rank == h[i+2].rank && h[i].rank == h[i+3].rank {
+			cards = append(cards, h[i], h[i+1], h[i+2], h[i+3])
+		}
+	}
+
+	return cards
+}
+
+func (h Hand) FullHouse() bool {
+	// TODO: this is different for 5 and 7 card hands ?
+	return len(h.Pair()) == 1 && len(h.Three()) == 1
+}
+
+func (h Hand) Flush() bool {
+	suit := h[0].suit
+	for i := 1; i < len(h); i++ {
+		if suit != h[i].suit {
+			return false
+		}
+	}
+	return true
+}
+
+func (h Hand) Straight() bool {
+	sort.Sort(h) // TODO: ensure hand is always sorted to avoid this
+	rank := h[0].rank
+	for i := 1; i < len(h); i++ {
+		if h[i].rank != rank+i {
+			return false
+		}
+	}
+	return true
+}
+
+func (h Hand) Three() []Card {
+	sort.Sort(h) // TODO: ensure hand is always sorted to avoid this
+
+	cards := []Card{}
 
 	for i := 0; i < len(h)-2; i++ {
 		if h[i].rank == h[i+1].rank && h[i].rank == h[i+2].rank {
-			ret = append(ret, i)
+			// don't count 4 of a kind, etc.
+			if i == len(h)-3 || h[i].rank != h[i+3].rank {
+				cards = append(cards, h[i], h[i+1], h[i+2])
+			}
 		}
 	}
 
-	return ret
+	return cards
 }
 
-//Strait4 returns the suit and rank of a straight. -1 for none
-func (h Hand) Strait4() (int, int) {
-	sort.Sort(h)
-	for start := 0; start < len(h)-3; start++ {
-		if h[start].suit == h[start+1].suit &&
-			h[start].suit == h[start+2].suit &&
-			h[start].suit == h[start+3].suit &&
-			h[start].rank+1 == h[start+1].rank &&
-			h[start].rank+2 == h[start+2].rank &&
-			h[start].rank+3 == h[start+3].rank {
-			return h[start].suit, h[start].rank
+func (h Hand) Pair() []Card {
+	sort.Sort(h) // TODO: ensure hand is always sorted to avoid this
+
+	cards := []Card{}
+
+	for i := 0; i < len(h)-1; i++ {
+		if h[i].rank == h[i+1].rank {
+			if i == len(h)-2 || h[i].rank != h[i+2].rank {
+				cards = append(cards, h[i], h[i+1])
+			}
 		}
 	}
-	return -1, -1
+
+	return cards
 }
 
-func (h Hand) Strait5() (int, int) {
-	sort.Sort(h)
-	for start := 0; start < len(h)-4; start++ {
-		if h[start].suit == h[start+1].suit &&
-			h[start].suit == h[start+2].suit &&
-			h[start].suit == h[start+3].suit &&
-			h[start].suit == h[start+4].suit &&
-			h[start].rank+1 == h[start+1].rank &&
-			h[start].rank+2 == h[start+2].rank &&
-			h[start].rank+3 == h[start+3].rank &&
-			h[start].rank+4 == h[start+4].rank {
-			return h[start].suit, h[start].rank
-		}
-	}
-	return -1, -1
-}
-
-func (a Hand) Pair() (int, int) {
-	sort.Sort(a)
-	for start := 0; start < len(a)-4; start++ {
-		if a[start].suit == a[start+1].suit &&
-			a[start].rank == a[start+1].rank {
-			return a[start].suit, a[start].rank
-		}
-	}
-	return -1, -1
+// TODO: Score a hand for comparison
+func (h Hand) Score() int {
+	return 0
 }
 
 // ReplaceCard replaces the nth card with a new one from the deck

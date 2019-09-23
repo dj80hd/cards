@@ -2,42 +2,43 @@ package main
 
 import (
 	_ "fmt"
-	"sort"
 	"testing"
 )
 
 var (
-	fourOfAKind = Hand([]Card{
-		Card{suit: 0, rank: 1},
-		Card{suit: 1, rank: 1},
-		Card{suit: 2, rank: 1},
-		Card{suit: 3, rank: 1},
-		Card{suit: 0, rank: 0},
-	})
+	hands = map[string]Hand{
+		"royalFlush": Hand([]Card{
+			Card{suit: 0, rank: 9},
+			Card{suit: 0, rank: 10},
+			Card{suit: 0, rank: 11},
+			Card{suit: 0, rank: 12},
+			Card{suit: 0, rank: 13},
+		}),
 
-	threeOfAKind = Hand([]Card{
-		Card{suit: 0, rank: 0},
-		Card{suit: 0, rank: 1},
-		Card{suit: 1, rank: 1},
-		Card{suit: 2, rank: 1},
-		Card{suit: 3, rank: 2},
-	})
+		"straightFlush": Hand([]Card{
+			Card{suit: 1, rank: 8},
+			Card{suit: 1, rank: 9},
+			Card{suit: 1, rank: 10},
+			Card{suit: 1, rank: 11},
+			Card{suit: 1, rank: 12},
+		}),
 
-	fourStrait = Hand([]Card{
-		Card{suit: 3, rank: 3},
-		Card{suit: 1, rank: 4},
-		Card{suit: 1, rank: 3},
-		Card{suit: 1, rank: 2},
-		Card{suit: 1, rank: 1},
-	})
+		"four": Hand([]Card{
+			Card{suit: 0, rank: 1},
+			Card{suit: 1, rank: 1},
+			Card{suit: 2, rank: 1},
+			Card{suit: 3, rank: 1},
+			Card{suit: 0, rank: 0},
+		}),
 
-	fiveStrait = Hand([]Card{
-		Card{suit: 1, rank: 0},
-		Card{suit: 1, rank: 1},
-		Card{suit: 1, rank: 2},
-		Card{suit: 1, rank: 3},
-		Card{suit: 1, rank: 4},
-	})
+		"three": Hand([]Card{
+			Card{suit: 0, rank: 0},
+			Card{suit: 0, rank: 1},
+			Card{suit: 1, rank: 1},
+			Card{suit: 2, rank: 1},
+			Card{suit: 3, rank: 2},
+		}),
+	}
 )
 
 func TestDeck(t *testing.T) {
@@ -94,69 +95,14 @@ func TestOverDraw(t *testing.T) {
 	}
 }
 
-func TestSortHand(t *testing.T) {
-	fourStrait := fourStrait
-	sort.Sort(fourStrait)
-
-	if 1 != fourStrait[0].suit || 1 != fourStrait[0].rank {
-		t.Errorf("sort failed %v", fourStrait)
-	}
-}
-
 // TODO: This interface sucks
 func TestThree(t *testing.T) {
-
-	if 1 != threeOfAKind.Three()[0] {
-		t.Errorf("threeOfAKind %d", threeOfAKind.Three()[0])
+	cards := hands["three"].Three()
+	if len(cards) != 3 {
+		t.Errorf("expected 3 got %d ", len(cards))
 	}
-	if 1 != fourOfAKind.Three()[0] {
-		t.Errorf("threeOfAKind")
-	}
-	if len(fourStrait.Three()) != 0 {
-		t.Errorf("threeOfAKind")
-	}
-}
-
-func TestStrait4(t *testing.T) {
-	for _, c := range []struct {
-		hand Hand
-		suit int
-		rank int
-		desc string
-	}{
-		{hand: threeOfAKind, suit: -1, rank: -1, desc: "t1"},
-		{hand: fourOfAKind, suit: -1, rank: -1, desc: "t2"},
-		{hand: fourStrait, suit: 1, rank: 1, desc: "t3"},
-		{hand: fiveStrait, suit: 1, rank: 0, desc: "t4"},
-	} {
-		suit, rank := c.hand.Strait4()
-		if c.rank != rank {
-			t.Errorf("wrong rank %d expect %d %s", rank, c.rank, c.desc)
-		}
-		if c.suit != suit {
-			t.Errorf("wrong suit %d expect %d  %s", suit, c.suit, c.desc)
-		}
-	}
-}
-
-func TestStrait5(t *testing.T) {
-	for _, c := range []struct {
-		hand Hand
-		suit int
-		rank int
-		desc string
-	}{
-		{hand: threeOfAKind, suit: -1, rank: -1, desc: "t1"},
-		{hand: fourOfAKind, suit: -1, rank: -1, desc: "t2"},
-		{hand: fourStrait, suit: -1, rank: -1, desc: "t3"},
-		{hand: fiveStrait, suit: 1, rank: 0, desc: "t4"},
-	} {
-		suit, rank := c.hand.Strait5()
-		if c.rank != rank {
-			t.Errorf("wrong rank %d expect %d %s", rank, c.rank, c.desc)
-		}
-		if c.suit != suit {
-			t.Errorf("wrong suit %d expect %d  %s", suit, c.suit, c.desc)
-		}
+	cards = hands["four"].Three()
+	if len(cards) == 0 {
+		t.Errorf("expected 0 got %d ", len(cards))
 	}
 }
