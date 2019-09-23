@@ -8,6 +8,7 @@ import (
 func TestDeck(t *testing.T) {
 	deck1 := NewDeck()
 	deck2 := NewDeck()
+
 	if 52 != deck1.Len() {
 		t.Errorf("deck has %d", deck1.Len())
 	}

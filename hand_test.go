@@ -65,7 +65,7 @@ var (
 			Card{suit: 0, rank: 2},
 		}),
 
-		"straigt": Hand([]Card{
+		"straight": Hand([]Card{
 			Card{suit: 0, rank: 4},
 			Card{suit: 1, rank: 3},
 			Card{suit: 2, rank: 2},
@@ -74,11 +74,11 @@ var (
 		}),
 
 		"flush": Hand([]Card{
-			Card{suit: 0, rank: 4},
+			Card{suit: 1, rank: 4},
 			Card{suit: 1, rank: 3},
-			Card{suit: 2, rank: 2},
-			Card{suit: 3, rank: 1},
-			Card{suit: 0, rank: 0},
+			Card{suit: 1, rank: 2},
+			Card{suit: 1, rank: 1},
+			Card{suit: 1, rank: 0},
 		}),
 	}
 )
@@ -108,17 +108,21 @@ func TestReplaceCard(t *testing.T) {
 }
 
 func TestHandes(t *testing.T) {
-	if false {
+	if true {
+		assert.Equal(t, 0, len(hands["three"].Pair()))
 		assert.Equal(t, 3, len(hands["three"].Three()))
 		assert.Equal(t, 0, len(hands["three"].Four()))
+		assert.Equal(t, 0, len(hands["four"].Pair()))
+		assert.Equal(t, 0, len(hands["four"].Three()))
 		assert.Equal(t, 4, len(hands["four"].Four()))
+		assert.Equal(t, 2, len(hands["1pair"].Pair()))
+		assert.Equal(t, 0, len(hands["1pair"].Three()))
+		assert.Equal(t, 0, len(hands["1pair"].Four()))
+		assert.Equal(t, 4, len(hands["2pair"].Pair()))
 		assert.True(t, hands["royalFlush"].RoyalFlush())
 		assert.True(t, hands["straightFlush"].StraightFlush())
-		assert.Equal(t, 2, len(hands["1pair"].Pair()))
+		assert.True(t, hands["fullhouse"].FullHouse())
+		assert.True(t, hands["flush"].Flush())
+		assert.True(t, hands["straight"].Straight())
 	}
-	assert.Equal(t, 0, len(hands["three"].Pair()))
-	assert.Equal(t, 0, len(hands["four"].Three()))
-	assert.True(t, hands["fullhouse"].FullHouse())
-	//assert.True(t, hands["flush"].Flush())
-	//assert.True(t, hands["straight"].Straight())
 }
