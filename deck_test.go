@@ -103,14 +103,16 @@ func TestSortHand(t *testing.T) {
 	}
 }
 
+// TODO: This interface sucks
 func TestThree(t *testing.T) {
-	if 1 != threeOfAKind.Three() {
+
+	if 1 != threeOfAKind.Three()[0] {
+		t.Errorf("threeOfAKind %d", threeOfAKind.Three()[0])
+	}
+	if 1 != fourOfAKind.Three()[0] {
 		t.Errorf("threeOfAKind")
 	}
-	if 1 != fourOfAKind.Three() {
-		t.Errorf("threeOfAKind")
-	}
-	if -1 != fourStrait.Three() {
+	if len(fourStrait.Three()) != 0 {
 		t.Errorf("threeOfAKind")
 	}
 }
