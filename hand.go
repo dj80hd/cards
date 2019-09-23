@@ -5,27 +5,15 @@ import (
 	"sort"
 )
 
-/**
-*
-* RoyalFlush bool
-* StraitFlush() bool
-* Four() []int
-* FullHouse() bool
-* Flush() bool
-* Straight() bool
-* Three() []int
-* Pair() []int
- */
-
 type Hand []Card
 
 func (a Hand) Len() int      { return len(a) }
 func (a Hand) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
 func (a Hand) Less(i, j int) bool {
-	if a[i].suit == a[j].suit {
-		return a[i].rank < a[j].rank
+	if a[i].rank == a[j].rank {
+		return a[i].suit < a[j].suit
 	}
-	return a[i].suit < a[j].suit
+	return a[i].rank < a[j].rank
 }
 
 func (h Hand) RoyalFlush() bool {
@@ -63,7 +51,8 @@ func (h Hand) Four() []Card {
 
 func (h Hand) FullHouse() bool {
 	// TODO: this is different for 5 and 7 card hands ?
-	return len(h.Pair()) == 1 && len(h.Three()) == 1
+	fmt.Println(len(h.Pair()), len(h.Three()))
+	return len(h.Pair()) == 2 && len(h.Three()) == 3
 }
 
 func (h Hand) Flush() bool {
@@ -97,6 +86,8 @@ func (h Hand) Three() []Card {
 			// don't count 4 of a kind, etc.
 			if i == len(h)-3 || h[i].rank != h[i+3].rank {
 				cards = append(cards, h[i], h[i+1], h[i+2])
+			} else {
+				i = i + 3
 			}
 		}
 	}
@@ -109,10 +100,17 @@ func (h Hand) Pair() []Card {
 
 	cards := []Card{}
 
+	fmt.Println("hand", h)
 	for i := 0; i < len(h)-1; i++ {
+		fmt.Println("pair index", i)
 		if h[i].rank == h[i+1].rank {
+			fmt.Println("pair found", h[i].rank, h[i+1].rank)
+			// dont count 3, 4 of a kind
 			if i == len(h)-2 || h[i].rank != h[i+2].rank {
+				fmt.Println("pair appended", h[i].rank, h[i+1].rank)
 				cards = append(cards, h[i], h[i+1])
+			} else {
+				i = i + 2
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 test:
 	go fmt ./...
-	go test -race
+	go test -v -race
 	golangci-lint run
 
 cover: test
